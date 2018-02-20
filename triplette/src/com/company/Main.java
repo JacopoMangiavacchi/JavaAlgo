@@ -66,55 +66,61 @@ public class Main {
     }
 
 
+    private static class Incrementor {
+        int i;
+        int j;
+        int l;
+        int o;
+        int c;
+
+        Incrementor(int length) {
+            c = length;
+            i = 0;
+            j = 1;
+            l = 2;
+            o = 0;
+        }
+
+        boolean canIncrement() {
+            return (i < c && j < c && l < c);
+        }
+
+        void next() {
+            if (j < c-2) {
+                j += 1;
+                l = j+1;
+            }
+            else {
+                i = o + 1;
+                j = i + 1;
+                l = i + 2;
+                o = i;
+            }
+        }
+    }
+
+
     public static Set<Triplette> findTriplette(int[] array) {
         Set<Triplette> triplette = new HashSet<Triplette>();
         Arrays.sort(array);
-        int c = array.length;
-        int i=0, j=1, l=2, o=0;
+        Incrementor i = new Incrementor(array.length);
 
-        while (i<c && j<c && l<c) {
-            int t = array[i]+array[j]+array[l];
+        while (i.canIncrement()) {
+            int t = array[i.i] + array[i.j] + array[i.l];
             if (t == 0) {
-                triplette.add(new Triplette(array[i], array[j], array[l]));
-                if (j<c-2) {
-                    j+=1;
-                    l=j+1;
-                }
-                else {
-                    i=o+1;
-                    j=i+1;
-                    l=i+2;
-                    o=i;
-                }
+                triplette.add(new Triplette(array[i.i], array[i.j], array[i.l]));
+                i.next();
             }
-            else if (t<0) {
-                if (l<c-1) {
-                    l+=1;
+            else if (t < 0) {
+                if (i.l < i.c - 1) {
+                    i.l += 1;
                 }
                 else {
-                    if (j<c-2) {
-                        j+=1;
-                        l=j+1;
-                    }
-                    else {
-                        i=o+1;
-                        j=i+1;
-                        l=i+2;
-                        o=i;
-                    }
+                    i.next();
                 }
             }
             else {
-                if (j<c-2) {
-                    j+=1;
-                    l=j+1;
-                }
-                else {
-                    i=o+1;
-                    j=i+1;
-                    l=i+2;
-                    o=i;
-                }
+                i.next();
             }
         }
 
